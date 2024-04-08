@@ -1,12 +1,18 @@
 package com.cesar.netty
 
 import com.cesar.netty.client.NettyClient
-import com.cesar.netty.server.NettyServer
+import org.slf4j.LoggerFactory
 
 object MainApp {
+  val logger = LoggerFactory.getLogger(getClass)
+
   def main(args: Array[String]): Unit = {
-    val nettyServer = new NettyServer
+    //    val nettyServer = new NettyServer
     val nettyClient = new NettyClient
-    nettyServer.start()
+    logger.info("conectando")
+    nettyClient.connect()
+    //    logger.info("Iniciando")
+    //    nettyServer.start()
+    Thread.sleep(2000)
   }
 }

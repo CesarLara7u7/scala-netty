@@ -1,46 +1,25 @@
 package com.cesar.netty.server
 
 import io.netty.buffer.ByteBuf
-import io.netty.channel.{ChannelHandlerContext, ChannelInboundHandler}
+import io.netty.channel.{ChannelHandlerContext, ChannelInboundHandler, ChannelInboundHandlerAdapter}
+import io.netty.util.CharsetUtil
 import org.slf4j.LoggerFactory
 
 
-class DiscardServerHandler() extends ChannelInboundHandler {
+class DiscardServerHandler()extends ChannelInboundHandlerAdapter {
+
   val logger = LoggerFactory.getLogger(getClass)
 
-  override def channelRegistered(channelHandlerContext: ChannelHandlerContext): Unit = {
-    logger.info("Registering")
+
+  override def channelRead(channelHandlerContext: ChannelHandlerContext, msg: Any): Unit = {
+    logger.info("CHANNEL READ")
+    logger.info("CHANNEL {}", channelHandlerContext)
+    val message: ByteBuf = msg.asInstanceOf[ByteBuf]
+    logger.info("Bytebuf: {}", message)
+    logger.info("reading: {}", message.toString(CharsetUtil.UTF_8))
+    //TODO: Manejar el mensaje
   }
 
-  override def channelUnregistered(channelHandlerContext: ChannelHandlerContext): Unit = {
-    logger.info("Unregistering")
-  }
-
-  override def channelActive(channelHandlerContext: ChannelHandlerContext): Unit = {
-    logger.info("Active")
-  }
-
-  override def channelInactive(channelHandlerContext: ChannelHandlerContext): Unit = {
-    logger.info("Inactive")
-  }
-
-  override def channelRead(channelHandlerContext: ChannelHandlerContext, o: Any): Unit = {
-    logger.info("reading")
-    (message: ByteBuf)=>
-      message.release()
-  }
-
-  override def channelReadComplete(channelHandlerContext: ChannelHandlerContext): Unit = {
-    logger.info("read complete")
-  }
-
-  override def userEventTriggered(channelHandlerContext: ChannelHandlerContext, o: Any): Unit = {
-    logger.info("Tiggering event")
-  }
-
-  override def channelWritabilityChanged(channelHandlerContext: ChannelHandlerContext): Unit = {
-    logger.info("Writabiling")
-  }
 
   override def exceptionCaught(channelHandlerContext: ChannelHandlerContext, throwable: Throwable): Unit = {
     logger.info("Exception")
@@ -48,11 +27,13 @@ class DiscardServerHandler() extends ChannelInboundHandler {
     channelHandlerContext.close()
   }
 
-  override def handlerAdded(channelHandlerContext: ChannelHandlerContext): Unit = {
-    logger.info("adding handler")
+  override def handlerAdded(ctx: ChannelHandlerContext): Unit = {
+    logger.info("Adding connection: {}", ctx)
+    //TODO: MANEJAR LA CONEXION PARA ALMACENARLA
   }
 
-  override def handlerRemoved(channelHandlerContext: ChannelHandlerContext): Unit = {
-    logger.info("removing handler")
+  override def handlerRemoved(ctx: ChannelHandlerContext): Unit = {
+    logger.info("Removing connection: {}", ctx)
+    //TODO: REMOVER LA CONEXION
   }
 }

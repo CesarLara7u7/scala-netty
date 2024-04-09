@@ -17,15 +17,16 @@ class NettyClient {
       bootstrap.channel(classOf[NioSocketChannel])
       bootstrap.option(ChannelOption.SO_KEEPALIVE.asInstanceOf[ChannelOption[Any]], true)
       val timeClientHandler = new TimeClientHandler
+      val timeDecoder = new TimeDecoder
       bootstrap.handler(new ChannelInitializer[SocketChannel] {
         override def initChannel(ch: SocketChannel): Unit = {
-          ch.pipeline().addLast(timeClientHandler)
+          ch.pipeline().addLast(timeClientHandler, timeDecoder)
         }
       })
       logger.info("Connecting")
       val future: ChannelFuture = bootstrap.connect("localhost", 8888).sync()
-      future
       logger.info("Connected")
+      timeClientHandler.sendMessage("WAZAAAAAAA")
       future.channel().closeFuture().sync()
     } finally {
       workerGroup.shutdownGracefully()

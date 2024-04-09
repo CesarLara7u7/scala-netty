@@ -13,6 +13,5 @@ object MainApp {
     nettyClient.connect()
     //    logger.info("Iniciando")
     //    nettyServer.start()
-    Thread.sleep(2000)
   }
 }
